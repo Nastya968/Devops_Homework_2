@@ -1,25 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "centos/7"
-  config.vm.synced_folder "files", "/home/vagrant/www/default/", type: "rsync"
+config.vm.define "ubuntu" do |ubuntu|
+    ubuntu.vm.box = "ubuntu/focal64"
+  end
+
+  config.vm.define "centos" do |centos|
+    centos.vm.box = "centos/7"
+  end
 
 
-  config.vm.network "forwarded_port", guest: 80, host: 8888, host_ip: "127.0.0.1"
+ config.vm.provider "virtualbox" do |vb|
   
-
- 
-  config.vm.provision "shell", inline: <<-SHELL
-
-  yum install -y epel-release
-  yum install -y nginx
-  systemctl -l enable nginx
-   -l start nginx
-
-  cp www/default/nginx.conf /etc/nginx/
-  chmod 755 /home/vagrant
-  chcon -Rt httpd_sys_content_t www/default
-  systemctl restart nginx
-
-   SHELL
+     vb.memory = "2048"
+     
+  end
+  
 end
